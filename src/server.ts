@@ -4,7 +4,8 @@ import App from './app';
 
 function main() {
     const server = new MRE.WebHost({
-        baseDir: resolvePath(__dirname, '../public')
+        baseDir: resolvePath(__dirname, '../public'),
+        baseUrl: "https://ar-memoria.herokuapp.com/"
     });
 
     server.adapter.onConnection(ctx => new App(ctx, server));

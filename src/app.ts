@@ -36,12 +36,11 @@ export default class Memoria {
         this.ctx.onStarted(() => this.started());
         this.ctx.onUserJoined(this.onUserJoined.bind(this));
         this.ctx.rpc.on(RPC.LocationChanged, this.onLocationChanged.bind(this));
-        this.ctx.rpc.on(RPC.ObjectDetected, this.onObjectDetected.bind(this));
     }
 
     private async started() {
         console.log("START Application");
-        const video = new Video(this.ctx, this.assets, 0.2, 0.2, {x: 0, y: 0, z: 0}, `http://10.113.164.102:3901/Big_Buck_Bunny_720_10s_10MB.mp4`);
+        const video = new Video(this.ctx, this.assets, 0.2, 0.2, {x: 0, y: 0, z: 0}, `${this.host.baseUrl}/Big_Buck_Bunny_720_10s_10MB.mp4`);
         video.show();
     }
 
@@ -62,38 +61,6 @@ export default class Memoria {
         this.userObjects[userId] = [];
         console.log(`user: ${user.name}[${userId}] is registed`);
     }
-
-    private onObjectDetected(options: { userId: Guid; }, ...args: any[]): void {
-        console.log(`onObjectDetected... user [${options.userId}], ${args[0]}`);
-        const objectType = args[0];
-        const x = args[1];
-        const y = args[2];
-        const z = args[3];
-        const locationId = args[4];
-        const position = x instanceof Number && y instanceof Number && z instanceof Number ?
-            { x: 0, y: 0, z: 0 } : { x, y, z };
-
-        const userId = options.userId?.toString();
-        if (!userId) return;
-
-        const objs = this.userObjects[userId];
-
-        if (objs.length > 0) {
-            for (let i = 0 ; i < objs.length; i++) {
-                if (objs[i].type === objectType)
-                {
-                    objs[i].obj.show();
-                    objs[i].obj.move(position);
-                    objs[i].positioned = true;
-                    console.log(`${objectType} => ${position.x}, ${position.y}, ${position.z} - ${userId}`);
-                    break;
-                }
-            }
-        }
-        this.userMap[userId].remainedPositions.push({position, type: objectType, locationId});
-        console.log(`remained position is pushed : ${objectType} / ${locationId} / (${position.x}, ${position.y}, ${position.z})`);
-    }
-
 
     private onLocationChanged(options: { userId: Guid; }, ...args: any[]) : void
     {
