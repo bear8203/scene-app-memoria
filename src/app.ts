@@ -40,7 +40,7 @@ export default class Memoria {
 
     private async started() {
         console.log("START Application");
-        const video = new Video(this.ctx, this.assets, 0.2, 0.2, {x: 0, y: 0, z: 0}, `${this.host.baseUrl}/Big_Buck_Bunny_720_10s_10MB.mp4`);
+        const video = new Video(this.ctx, this.assets, 0.2, 0.2, {x: 0, y: 10, z: 0}, `${this.host.baseUrl}/Big_Buck_Bunny_720_10s_10MB.mp4`);
         video.show();
     }
 
